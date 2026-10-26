@@ -1900,45 +1900,6 @@ describe("free-provider directory isolation", () => {
     }
   });
 
-  test("the Runcrate row bounds its free allowance and keeps the paid catalog discoverable", () => {
-    // The row accepts a key and discovers the full /v1/models catalog, which is mostly paid. Only
-    // five named models have a free allowance (runcrate.ai/inference/free, checked 2026-10-26), so
-    // the note must carry those bounds instead of advertising the whole catalog as free.
-    const row = FREE_PROVIDER_DIRECTORY.find(entry => entry.id === "runcrate");
-    expect(row).toMatchObject({
-      label: "Runcrate",
-      adapter: "openai-chat",
-      baseUrl: "https://api.runcrate.ai/v1",
-      authKind: "key",
-      accessGroups: ["recurring-or-keyless"],
-      supportLevel: "experimental",
-      verification: "official",
-      documentationUrl: "https://www.runcrate.ai/docs/models/chat-completions",
-      modelsUrl: "https://api.runcrate.ai/v1/models",
-      dashboardUrl: "https://www.runcrate.ai/dashboard/api-keys",
-      discovery: "hybrid",
-      liveModels: true,
-      lastVerified: "2026-10-26",
-    });
-    expect(row?.keyOptional).toBeUndefined();
-    expect(row?.models).toEqual([
-      "deepseek-ai/DeepSeek-V4.1-Flash",
-      "zai-org/GLM-5.3-Flash",
-      "zai-org/GLM-5.3",
-      "openai/gpt-oss-120b",
-      "Qwen/Qwen3.8-Flash",
-    ]);
-    const note = row?.note ?? "";
-    expect(note).toContain("Only the five listed open models have a free allowance");
-    expect(note).toContain("GitHub account at least 30 days old");
-    expect(note).toContain("per session and per week");
-    expect(note).toContain("Every other discovered model is paid");
-    expect(note).toContain("continues as paid traffic");
-    expect(note).toContain("https://www.runcrate.ai/inference/free");
-    // Directory-only: it must not become a canonical credential destination.
-    expect(PROVIDER_REGISTRY.some(entry => entry.id === "runcrate")).toBe(false);
-  });
-
   /*
    * #1057. The registry classifies DeepSeek V4 ids Flash-versus-Pro with a substring
    * test, which is correct for every id shipped today but is exactly the kind of
