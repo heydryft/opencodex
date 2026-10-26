@@ -119,9 +119,14 @@ const CONNECTABLE: Record<string, ConnectableOverride> = {
   ovhcloud: openAi("https://oai.endpoints.kepler.ai.cloud.ovh.net/v1", "https://console.ovhcloud.com", { keyOptional: true, modelsUrl: "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models" }),
   pollinations: openAi("https://gen.pollinations.ai/v1", "https://pollinations.ai", { keyOptional: true }),
   reka: openAi("https://api.reka.ai/v1", "https://platform.reka.ai"),
-  // Verified 2026-10-24: GET /v1/models is public (no key) and returns the OpenAI-shaped catalog;
-  // a chat completion with deepseek-ai/DeepSeek-V4.1-Flash returned a standard chat.completion.
-  runcrate: openAi("https://api.runcrate.ai/v1", "https://www.runcrate.ai/dashboard/api-keys", { verification: "official", documentationUrl: "https://www.runcrate.ai/openapi.json", modelsUrl: "https://api.runcrate.ai/v1/models", lastVerified: "2026-10-24", note: "Open models are free with your GitHub account." }),
+  // Checked 2026-10-26. Free terms: https://www.runcrate.ai/inference/free covers five named open
+  // models only, one allowance per GitHub account at least 30 days old, limited per session and per
+  // week and shared by the workspace; a workspace with credit continues as paid traffic once the
+  // allowance is used or free capacity is busy. Endpoint: https://www.runcrate.ai/docs/models/chat-completions.
+  // Operator: Aeonmind LLC (https://www.runcrate.ai/terms). GET /v1/models is public and returned
+  // 193 rows (text, image, video, audio, embeddings), all with paid list prices, including the five
+  // free ids. Discovery is hybrid: the five free ids are seeded, and live discovery still lists the full paid catalog.
+  runcrate: openAi("https://api.runcrate.ai/v1", "https://www.runcrate.ai/dashboard/api-keys", { verification: "official", documentationUrl: "https://www.runcrate.ai/docs/models/chat-completions", modelsUrl: "https://api.runcrate.ai/v1/models", lastVerified: "2026-10-26", discovery: "hybrid", models: ["deepseek-ai/DeepSeek-V4.1-Flash", "zai-org/GLM-5.3-Flash", "zai-org/GLM-5.3", "openai/gpt-oss-120b", "Qwen/Qwen3.8-Flash"], note: "Only the five listed open models have a free allowance: one per GitHub account at least 30 days old, limited per session and per week, and shared by the workspace. Every other discovered model is paid; chat inference uses published per-token rates. When the allowance is used up or free capacity is busy, a workspace with credit continues as paid traffic; without credit, requests stop until the allowance resets or capacity frees up. Terms: https://www.runcrate.ai/inference/free" }),
   sambanova: openAi("https://api.sambanova.ai/v1", "https://cloud.sambanova.ai/apis", { supportLevel: "supported", verification: "official", documentationUrl: "https://docs.sambanova.ai/docs/en/get-started/api-keys-urls", modelsUrl: "https://api.sambanova.ai/v1/models", lastVerified: "2026-08-02" }),
   sparkdesk: openAi("https://spark-api-open.xf-yun.com/v1", "https://console.xfyun.cn", { verification: "official", documentationUrl: "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html" }),
   agnes: openAi("https://apihub.agnes-ai.com/v1", "https://agnes-ai.com"),
